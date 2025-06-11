@@ -18,14 +18,12 @@ async function manipularSubmissaoFormulario(evento) {
     const autoria = document.getElementById("pensamento-autoria").value;
 
     try {
-        if (conteudo.trim() === "" || autoria.trim() === "") {
-            evento.preventDefault();
-            alert("Preencha todos os campos antes de salvar o pensamento");
-            return;
-        } else {
+        if (id) {
+            await api.alterarPensamento({id, conteudo, autoria});
+        } else { 
             await api.salvarPensamento({conteudo, autoria})
-            ui.renderizarPensamentos();
-        }
+        } 
+        ui.renderizarPensamentos();
     } catch {
         alert("Erro ao salvar pensamento");
     }
