@@ -4,8 +4,11 @@ import api from "./services/api.js";
 document.addEventListener("DOMContentLoaded", () => {
     ui.renderizarPensamentos();
 
+    const botaoCancelar = document.getElementById("botao-cancelar");
     const formularioPensamento = document.getElementById("pensamento-form");
     formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
+    botaoCancelar.addEventListener("click", cancelarPensamento);
+    
 });
 
 async function manipularSubmissaoFormulario(evento) {
@@ -14,16 +17,20 @@ async function manipularSubmissaoFormulario(evento) {
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
 
-    // const pensamento = {
-    //     id,
-    //     conteudo,
-    //     autoria
-    // }
-
     try {
-        await api.salvarPensamento({conteudo, autoria})
-        ui.renderizarPensamentos();
+        if (conteudo.trim() === "" || autoria.trim() === "") {
+            evento.preventDefault();
+            alert("Preencha todos os campos antes de salvar o pensamento");
+            return;
+        } else {
+            await api.salvarPensamento({conteudo, autoria})
+            ui.renderizarPensamentos();
+        }
     } catch {
         alert("Erro ao salvar pensamento");
     }
+}
+
+function cancelarPensamento() {
+    ui.limparFormularioPensamento();
 }
