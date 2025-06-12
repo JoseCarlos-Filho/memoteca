@@ -2,6 +2,7 @@ import ui from "./services/ui.js";
 import api from "./services/api.js";
 
 document.addEventListener("DOMContentLoaded", () => {
+    
     ui.renderizarPensamentos();
 
     const botaoCancelar = document.getElementById("botao-cancelar");
