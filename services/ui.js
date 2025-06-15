@@ -30,8 +30,9 @@ const ui = {
                 mensagemVazia.style.display = "none";
                 pensamentosParaRenderizar.forEach(ui.adicionarPensamentoNaLista);
             }
-        } catch {
+        } catch (error) {
             alert("Erro ao renderizar os pensamentos");
+            throw error;
         }
     },
 
