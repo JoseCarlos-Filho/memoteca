@@ -20,12 +20,18 @@ async function manipularSubmissaoFormulario(evento) {
     const id = document.getElementById("pensamento-id").value;
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
+    const data = document.getElementById("pensamento-data").value;
+
+    if (!validarData(data)) {
+        alert("Não é permitido inserir uma data futura.");
+        return;
+    }
 
     try {
         if (id) {
-            await api.alterarPensamento({id, conteudo, autoria});
+            await api.alterarPensamento({id, conteudo, autoria, data});
         } else { 
-            await api.salvarPensamento({conteudo, autoria})
+            await api.salvarPensamento({conteudo, autoria, data});
         } 
         ui.renderizarPensamentos();
     } catch {
@@ -46,4 +52,10 @@ async function manipularBusca() {
     } catch (error) {
         alert("Erro ao realizar busca");
     }
+}
+
+function validarData(data) {
+    const dataAtual = new Date();
+    const dataInserida = new Date(data);
+    return dataInserida <= dataAtual;
 }
