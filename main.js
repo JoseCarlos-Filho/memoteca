@@ -1,6 +1,12 @@
 import ui from "./services/ui.js";
 import api from "./services/api.js";
 
+const regexConteudo = /^[A-Za-z\s]{10,}$/
+
+function validarConteudo(conteudo) {
+  return regexConteudo.test(conteudo)
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     
     ui.renderizarPensamentos();
@@ -21,6 +27,11 @@ async function manipularSubmissaoFormulario(evento) {
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
     const data = document.getElementById("pensamento-data").value;
+
+    if (!validarConteudo(conteudo)) {
+        alert("O conteúdo deve ter pelo menos 10 caracteres e não pode conter números ou caracteres especiais.");
+        return;
+    }
 
     if (!validarData(data)) {
         alert("Não é permitido inserir uma data futura.");
