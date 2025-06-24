@@ -1,15 +1,41 @@
 import ui from "./services/ui.js";
 import api from "./services/api.js";
 
-const regexConteudo = /^[A-Za-z\s]{10,}$/
+const pensamentosSet = new Set();
+
+async function adicionarChaveAoPensamento() {
+    try {
+        const pensamentos = await api.buscarPensamentos();
+        pensamentos.forEach(pensamento => {
+            const chavePensamento = `
+                ${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}
+            `
+            pensamentosSet.add(chavePensamento);
+        })
+    } catch (error) {
+        alert("Erro ao adicionar chave ao pensamento");
+    }
+}
+
+const regexConteudo = /^[\p{L}0-9\s.,;!?:-]{10,}$/u
+const regexAutoria = /^[a-zA-Z]{2,15}$/
 
 function validarConteudo(conteudo) {
   return regexConteudo.test(conteudo)
 }
 
+function validarAutoria(autoria) {
+    return regexAutoria.test(autoria)
+}
+
+function removerEspacos(string) {
+    return string.replaceAll(/\s+/g, '')
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     
     ui.renderizarPensamentos();
+    adicionarChaveAoPensamento();
 
     const botaoCancelar = document.getElementById("botao-cancelar");
     const formularioPensamento = document.getElementById("pensamento-form");
@@ -27,9 +53,17 @@ async function manipularSubmissaoFormulario(evento) {
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
     const data = document.getElementById("pensamento-data").value;
+    
+    const conteudoSemEspacos = removerEspacos(conteudo)
+    const autoriaSemEspacos = removerEspacos(autoria)
 
-    if (!validarConteudo(conteudo)) {
+    if (!validarConteudo(conteudoSemEspacos)) {
         alert("O conteúdo deve ter pelo menos 10 caracteres e não pode conter números ou caracteres especiais.");
+        return;
+    }
+
+    if (!validarAutoria(autoriaSemEspacos)) {
+        alert("A autoria deve ter entre 3 e 15 caracteres, apenas letras.");
         return;
     }
 
@@ -37,6 +71,16 @@ async function manipularSubmissaoFormulario(evento) {
         alert("Não é permitido inserir uma data futura.");
         return;
     }
+
+    const chaveNovoPensamento = `
+        ${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}
+    `
+
+    if (pensamentosSet.has(chaveNovoPensamento)) {
+        alert("Pensamento já existe.");
+        return;
+    } 
+
 
     try {
         if (id) {
