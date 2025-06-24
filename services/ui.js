@@ -65,7 +65,8 @@ const ui = {
             day: "numeric",
             timeZone: "UTC"
         });
-        pensamentoData.textContent = dataFormatada;
+        const dataComRegex = dataFormatada.replace(/^(\w)/, (match) => match.toUpperCase());
+        pensamentoData.textContent = dataComRegex; 
         pensamentoData.classList.add("pensamento-data");
 
         const botaoEditar = document.createElement("button");
