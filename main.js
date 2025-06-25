@@ -7,9 +7,8 @@ async function adicionarChaveAoPensamento() {
     try {
         const pensamentos = await api.buscarPensamentos();
         pensamentos.forEach(pensamento => {
-            const chavePensamento = `
-                ${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}
-            `
+            const chavePensamento = 
+            `${pensamento.conteudo.trim().toLowerCase()}-${pensamento.autoria.trim().toLowerCase()}`
             pensamentosSet.add(chavePensamento);
         })
     } catch (error) {
@@ -40,6 +39,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const botaoCancelar = document.getElementById("botao-cancelar");
     const formularioPensamento = document.getElementById("pensamento-form");
     const inputBusca = document.getElementById("campo-busca");
+    document.getElementById("pensamento-conteudo").value = "";
+    document.getElementById("pensamento-autoria").value = "";
+
 
     formularioPensamento.addEventListener("submit", manipularSubmissaoFormulario);
     botaoCancelar.addEventListener("click", cancelarPensamento);
@@ -49,6 +51,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function manipularSubmissaoFormulario(evento) {
     evento.preventDefault();
+
     const id = document.getElementById("pensamento-id").value;
     const conteudo = document.getElementById("pensamento-conteudo").value;
     const autoria = document.getElementById("pensamento-autoria").value;
@@ -72,9 +75,7 @@ async function manipularSubmissaoFormulario(evento) {
         return;
     }
 
-    const chaveNovoPensamento = `
-        ${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}
-    `
+    const chaveNovoPensamento = `${conteudo.trim().toLowerCase()}-${autoria.trim().toLowerCase()}`
 
     if (pensamentosSet.has(chaveNovoPensamento)) {
         alert("Pensamento já existe.");
